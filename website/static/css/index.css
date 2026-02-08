@@ -1,0 +1,21 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.main-text {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.background {
+    background-color: #d4d4d4;
+}
+
+.main-body{
+    background-color: aquamarine;
+}

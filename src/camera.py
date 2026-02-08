@@ -1,8 +1,12 @@
+from collections import deque
 import cv2
+import mediapipe as mp
+from flask import render_template
 from flask import Flask, Response
 import numpy as np
-import mediapipe as mp
 from tensorflow.keras.models import load_model
+
+
 
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
@@ -26,16 +30,19 @@ def gen_frames():
     )
     hand_detector = vision.HandLandmarker.create_from_options(options)
 
+    prediction_buffer = deque(maxlen=7)
+    CONFIDENCE_THRESHOLD = 0.7
+
     while camera.isOpened():
         ret, frame = camera.read()
         if not ret:
             break
 
-        frame = cv2.flip(frame, 1)
+        # frame = cv2.flip(frame, 1)
         h, w, _ = frame.shape
 
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        # Convert to MediaPipe image
+
         mp_image = mp.Image(
             image_format=mp.ImageFormat.SRGB,
             data=rgb_frame
@@ -61,9 +68,21 @@ def gen_frames():
                 normalized = resized / 255.0
                 input_data = normalized.reshape(1, 28, 28, 1)
 
-                prediction = model.predict(input_data)
+                prediction = model.predict(input_data, verbose=0)
                 predicted_label = np.argmax(prediction)
-                predicted_letter = label_to_letter(predicted_label)
+                confidence = np.max(prediction)
+
+                prediction_buffer.append(predicted_label)   
+                
+                smoothed_label = max(
+                    set(prediction_buffer),
+                    key=prediction_buffer.count
+                )
+                
+                if confidence > CONFIDENCE_THRESHOLD:
+                    predicted_letter = label_to_letter(smoothed_label)
+                else:
+                    predicted_letter = "?"
 
                 cv2.putText(frame, predicted_letter, (x_min, y_min - 10), 
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
@@ -79,7 +98,7 @@ def video():
 
 @app.route('/')
 def index():
-    return Response('index.php')
+    return render_template("index.html")
 
 @app.route('/video')
 def video_route():
