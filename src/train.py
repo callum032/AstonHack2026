@@ -4,8 +4,8 @@ from model import build_model
 
 def main():
     X_train, y_train, X_test, y_test = load_data(
-        "data/raw/sign_mnist_train.csv",
-        "data/raw/sign_mnist_test.csv"
+        "AstonHack2026/data/raw/sign_mnist_train.csv",
+        "AstonHack2026/data/raw/sign_mnist_test.csv"
     )
 
     X_train = preprocess_images(X_train)
@@ -21,8 +21,8 @@ def main():
         validation_split=0.1
     )
 
-    model.save("models/sign_mnist_cnn.h5")
-    print("Model saved to models/sign_mnist_cnn.h5")
+    model.save("AstonHack2026/models/sign_mnist_cnn.h5")
+    print("Model saved to AstonHack2026/models/sign_mnist_cnn.h5")
 
 if __name__ == "__main__":
     main()

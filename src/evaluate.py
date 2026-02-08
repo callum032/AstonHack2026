@@ -5,11 +5,11 @@ from sklearn.metrics import confusion_matrix, classification_report
 import numpy as np
 
 def main():
-    model = load_model("models/sign_mnist_cnn.h5")
+    model = load_model("AstonHack2026/models/sign_mnist_cnn.h5")
 
     _, _, X_test, y_test = load_data(
-        "data/raw/sign_mnist_train.csv",
-        "data/raw/sign_mnist_test.csv"
+        "AstonHack2026/data/raw/sign_mnist_train.csv",
+        "AstonHack2026/data/raw/sign_mnist_test.csv"
     )
 
     X_test = preprocess_images(X_test)

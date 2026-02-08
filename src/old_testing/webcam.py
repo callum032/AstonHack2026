@@ -9,7 +9,7 @@ from mediapipe.tasks.python import vision
 from preprocess import label_to_letter
 
 # Load CNN model
-model = load_model("models/sign_mnist_cnn.h5")
+model = load_model("AstonHack2026/models/sign_mnist_cnn.h5")
 
 # Load MediaPipe Hand Landmarker
 base_options = python.BaseOptions(
