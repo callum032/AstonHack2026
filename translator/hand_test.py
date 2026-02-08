@@ -5,7 +5,7 @@ from mediapipe.tasks.python import vision
 
 # Load hand landmarker model
 base_options = python.BaseOptions(
-    model_asset_path="hand_landmarker.task"
+    model_asset_path="AstonHack2026/translator/hand_landmarker.task"
 )
 
 options = vision.HandLandmarkerOptions(
