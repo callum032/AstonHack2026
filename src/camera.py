@@ -1,10 +1,13 @@
 from collections import deque
+from collections import deque
 import cv2
 import mediapipe as mp
 from flask import render_template
 from flask import Flask, Response
 import numpy as np
 from tensorflow.keras.models import load_model
+
+
 
 
 
@@ -29,6 +32,9 @@ def gen_frames():
         num_hands=1
     )
     hand_detector = vision.HandLandmarker.create_from_options(options)
+
+    prediction_buffer = deque(maxlen=7)
+    CONFIDENCE_THRESHOLD = 0.7
 
     prediction_buffer = deque(maxlen=7)
     CONFIDENCE_THRESHOLD = 0.7
@@ -69,7 +75,21 @@ def gen_frames():
                 input_data = normalized.reshape(1, 28, 28, 1)
 
                 prediction = model.predict(input_data, verbose=0)
+                prediction = model.predict(input_data, verbose=0)
                 predicted_label = np.argmax(prediction)
+                confidence = np.max(prediction)
+
+                prediction_buffer.append(predicted_label)   
+                
+                smoothed_label = max(
+                    set(prediction_buffer),
+                    key=prediction_buffer.count
+                )
+                
+                if confidence > CONFIDENCE_THRESHOLD:
+                    predicted_letter = label_to_letter(smoothed_label)
+                else:
+                    predicted_letter = "?"
                 confidence = np.max(prediction)
 
                 prediction_buffer.append(predicted_label)   
