@@ -13,7 +13,7 @@ model = load_model("AstonHack2026/models/sign_mnist_cnn.h5")
 
 # Load MediaPipe Hand Landmarker
 base_options = python.BaseOptions(
-    model_asset_path="models/hand_landmarker.task"
+    model_asset_path="AstonHack2026/models/hand_landmarker.task"
 )
 options = vision.HandLandmarkerOptions(
     base_options=base_options,
